@@ -1,0 +1,70 @@
+<?php
+
+use common\models\questionOfDay\QuestionOfDay;
+use stepankarasov\mailing\backend\grid\ActionColumn;
+use stepankarasov\mailing\common\models\template\Template;
+use stepankarasov\mailing\common\models\template\TemplateSearch;
+use yii\bootstrap4\Html;
+use yii\grid\GridView;
+use yii\helpers\Url;
+
+/* @var $this yii\web\View */
+/* @var $searchModel TemplateSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->title = 'Письма';
+$this->params['breadcrumbs'][] = $this->title;
+?>
+
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 text-center text-sm-left mb-0">
+        <span class="text-uppercase page-subtitle">Список писем которые мы отправляем пользователям</span>
+        <h3 class="page-title"><?= $this->title ?></h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-5">
+            <div class="card-header border-bottom">
+                <h6 class="m-0">Список</h6>
+
+                <div class="actions">
+                    <a class="btn-floating-action" href="<?= Url::to(['create']) ?>" data-toggle="tooltip" data-placement="top" data-original-title="Add new">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0 pb-3">
+                <?= GridView::widget([
+                    'layout' => "{items}\n{pager}",
+                    'dataProvider' => $dataProvider,
+                    'pager'        => [
+                        'linkContainerOptions'          => ['class' => 'page-item'],
+                        'linkOptions'                   => ['class' => 'page-link'],
+                        'disabledListItemSubTagOptions' => ['tag' => 'a', 'class' => 'page-link']
+                    ],
+                    'columns'      => [
+                        [
+                            'attribute' => Template::ATTR_NAME,
+                            'format'    => 'raw',
+                            'value'     => function (Template $model)
+                            {
+                                return Html::a($model->name, ['view', 'id' => (string)$model->_id]);
+                            }
+                        ],
+                        [
+                            'class'    => ActionColumn::class,
+                            'headerOptions'=>[
+                                    'width'=>'80px'
+                            ],
+                            'template' => '{view} {update} {delete}'
+                        ],
+                    ],
+                ]); ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+
